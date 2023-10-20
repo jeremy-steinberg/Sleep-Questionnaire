@@ -1,0 +1,86 @@
+/* General body styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Header */
+h1 {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+h2, h3 {
+  color: #333;
+}
+
+/* Main content divs */
+#questionDiv, #recommendationsDiv {
+  background-color: white;
+  padding: 1em;
+  margin: 1em;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  line-height: 1.75em;
+}
+
+/* Radio buttons */
+input[type="radio"] {
+  margin-right: 0.5em;
+}
+
+/* Start/Restart button */
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 1em;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.hidden {
+  display: none;
+}
+
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5em;
+}
+
+/* Accordion */
+.accordion {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  border: none;
+  margin: 5px 0;
+  border-radius: 4px;
+}
+
+/* Accordion when hovered */
+.accordion:hover {
+  background-color: #0056b3;
+}
+
+.panel {
+  padding: 0 10px;
+  display: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
