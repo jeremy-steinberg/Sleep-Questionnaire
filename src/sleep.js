@@ -109,7 +109,7 @@
     function startQuestionnaire() {
 
       // Show the progress bar container
-      document.getElementById('progressBarContainer').style.display = 'block';
+      document.getElementById('progressBarContainer').style.display = 'flex';
 
       // Initialise the progress bar to 0%
       updateProgressBar(-1, questions.length);
@@ -168,10 +168,11 @@ function displayQuestion(index) {
     return;
   }
 
-  let html = `<p class="question-text">${question.text}</p>`;
+  let html = `<p class="question-text">${question.text}</p><div class="flex-container">`;
   question.options.forEach((option, i) => {
-    html += `<label><input type="radio" name="q${index}" value="${option}" onclick="handleUserInput(${index}, '${option}')">${option}</label><br>`;
+    html += `<label class="boxed-radio"><input type="radio" name="q${index}" value="${option}" style="display:none;" onclick="handleUserInput(${index}, '${option}')">${option}</label>`;
   });
+  html += '</div>';
 
   // Append Back and Skip buttons
   html += `<button onclick="handleBackClick(${index})"${index === 0 ? ' disabled' : ''}>Back</button>`;
