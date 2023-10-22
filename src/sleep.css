@@ -107,3 +107,13 @@ button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+#creditsDiv {
+  background-color: #f9f9f9;
+  color: #777;
+  font-size: 0.9em;
+  padding: 1em;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  margin-top: 2em;
+}

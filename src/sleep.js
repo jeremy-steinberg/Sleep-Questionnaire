@@ -119,9 +119,9 @@
       progressBar.innerText = '0%';
 
 
-      // Hide the Start and Print button
+      // Hide the Start button
       document.getElementById('startButton').style.display = 'none';
-      document.getElementById('printButton').style.display = 'none'
+
 
   // Show the questionDiv
   document.getElementById('questionDiv').classList.remove('hidden');
@@ -149,6 +149,10 @@
     const otherResourcesDiv = document.getElementById('otherResourcesDiv');
     otherResourcesDiv.innerText = '';
     otherResourcesDiv.classList.add('hidden');
+
+    //clear print and credits
+    document.getElementById('printButton').style.display = 'none';
+    document.getElementById('creditsDiv').style.display = 'none';
 
 }
 
@@ -225,7 +229,8 @@ function sleepRestrictionCondition(userAnswers) {
 
     return condition1 || condition2 || condition3;
 }
-      
+
+ 
 
 
 function generateRecommendations() {
@@ -377,6 +382,10 @@ function displayRecommendations() {
 
   // Show the Print button
 document.getElementById('printButton').style.display = 'block';
+
+
+// Show the credits Div
+document.getElementById('creditsDiv').style.display = 'block';
 
 
 }
