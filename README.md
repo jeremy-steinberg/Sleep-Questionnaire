@@ -1,6 +1,12 @@
 # Sleep-Questionnaire
-Sleep screening and advice tool 2023
+This is a sleep screening and advice tool.
+
+The tool asks the user 19 screening questions to base recommendations on.
+
+The questions are designed to try and get to one of around 10 possible diagnoses.
+
+# Credits
 
 The questions and recommendations were designed by Dr Bruce Arroll
 
-The tool asks the user 19 screening questions to base recommendations on.
+Coded by Jeremy Steinberg with help from GPT4
