@@ -108,6 +108,9 @@
     
     function startQuestionnaire() {
 
+      // Show the progress bar container
+      document.getElementById('progressBarContainer').style.display = 'block';
+
       // Initialise the progress bar to 0%
       updateProgressBar(-1, questions.length);
 
@@ -140,6 +143,11 @@
   const recommendationsDiv = document.getElementById('recommendationsDiv');
   recommendationsDiv.innerText = '';
   recommendationsDiv.classList.add('hidden');
+
+    // Clear the other resources display area
+    const otherResourcesDiv = document.getElementById('otherResourcesDiv');
+    otherResourcesDiv.innerText = '';
+    otherResourcesDiv.classList.add('hidden');
 
 
 }
@@ -178,6 +186,23 @@ function displayQuestion(index) {
 
       // ...
 
+//Defines criteria to display the sleep restriction advice in generateRecommendations
+function sleepRestrictionCondition(userAnswers) {
+    // Create an array of all keys except for the first and second question
+    const otherQuestions = Object.keys(userAnswers).filter(id => id !== '1' && id !== '2');
+
+    // Check if all other answers are 'No'
+    const allOthersNo = otherQuestions.every(id => userAnswers[id] === 'No');
+
+    // Check the conditions for question 1 and 2
+    const condition1 = userAnswers['1'] === 'Yes' && allOthersNo;
+    const condition2 = userAnswers['2'] === 'Yes' && allOthersNo;
+    const condition3 = userAnswers['1'] === 'Yes' && userAnswers['2'] === 'Yes' && allOthersNo;
+
+    return condition1 || condition2 || condition3;
+}
+      
+
 
 function generateRecommendations() {
   // Implement your logic to generate recommendations
@@ -186,8 +211,8 @@ function generateRecommendations() {
   // Convert the object values to an array
   const answersArray = Object.values(userAnswers);
 
-  // Check if all answers are 'No'
-  if (answersArray.every(answer => answer === 'No')) {
+  // Check if meets the sleep restriction recommendation condition
+  if (sleepRestrictionCondition(userAnswers)) {
     const everyNoText = `
   <p>If none of the above applies and you still have a sleep problem, you may have chronic insomnia. This is where you have a sleep disorder; there is no other explanation. It is very common and can be helped by several treatments.</p>
   <p>Go to bed later and spend fewer hours in bed. This is sleep restriction or time in bed restriction (see below). </p>
@@ -203,12 +228,8 @@ function generateRecommendations() {
     recommendations.add(everyNoText);
   }
 
-  if (userAnswers[1] === 'Yes' && userAnswers[2] === 'Yes') {
-    recommendations.add("You may have a sleep problem, also known as insomnia");
-  }
-
   if (userAnswers[3] === 'Yes') {
-  recommendations.add("You answered yes to being a shift worker. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/</a>. You may wish to see a sleep specialist if you are having sleep problems.");
+  recommendations.add("You answered yes to being a shift worker. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Shift Work page on Healthify</a>. You may wish to see a sleep specialist if you are having sleep problems.");
   }
 
   if (userAnswers[4] === 'Yes') {
@@ -216,7 +237,7 @@ function generateRecommendations() {
   }
 
   if (userAnswers[5] === 'Yes') {
-  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. You should attend to this. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/</a>");
+  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. You should attend to this. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>Sleep and Caffeine page</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>Food and Drink effects on Sleep page on Healthify</a>");
   }
 
   if (userAnswers[6] === 'Yes') {
@@ -232,23 +253,23 @@ function generateRecommendations() {
   }
 
   if (userAnswers[9] === 'Yes' || userAnswers[10] === 'Yes') {
-  recommendations.add("You may have a mood or depression problem. Discuss this with your GP");
+  recommendations.add("You may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality.");
   }
 
   if (userAnswers[11] === 'Yes' || userAnswers[12] === 'Yes') {
-  recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP.");
+  recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality.");
   }
 
   if (userAnswers[13] === 'Yes' || userAnswers[14] === 'Yes') {
-  recommendations.add("You may have sleep apnoea (OSA). Discuss this with your GP. If you stop breathing at night and have a morning headache and a dry mouth, it will likely be sleep apnoea.");
+  recommendations.add("You may have sleep apnoea (OSA). Discuss this with your GP as this could be a factor in your sleep quality. If you stop breathing at night and have a morning headache and a dry mouth, it will likely be sleep apnoea. See <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
   }
 
   if (userAnswers[15] === 'Yes') {
-  recommendations.add("You said you have a significant health problem affecting sleep quality. Discuss this with your GP.");
+  recommendations.add("You said you have a significant health problem affecting sleep quality. Discuss this with your GP as this could be a factor in your sleep quality.");
   }
 
   if (userAnswers[16] === 'Yes') {
-  recommendations.add("You may have restless legs or a brain issue. Discuss this with your GP. The technical term for this is a parasomnia.");
+  recommendations.add("You may have restless legs or a brain issue. The technical term for this is a parasomnia. Discuss this with your GP as this could be a factor in your sleep quality.");
   }
 
   if (userAnswers[17] === 'Yes') {
@@ -256,35 +277,23 @@ function generateRecommendations() {
   }
 
   if (userAnswers[18] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of non-prescription or recreational drug use. Try and reduce this or discuss this with your GP");
+  recommendations.add("You said yes to feeling the need to reduce the amount of non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Or discuss this with your GP.");
   }
 
   if (userAnswers[19] === 'Yes' || userAnswers[20] === 'Yes') {
   recommendations.add("You may have a condition called delayed sleep phase disorder. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night.");
   }
 
-  recommendations.add("Te Kete Sleep resource: <a href='https://healthify.nz/tools/t/te-kete-haerenga-and-sleep/' target='_blank'>https://healthify.nz/tools/t/te-kete-haerenga-and-sleep/</a>");
-
-  recommendations.add("Sleep apps: <a href='https://healthify.nz/apps/s/sleep-apps/' target='_blank'>https://healthify.nz/apps/s/sleep-apps/</a>");
-
-  recommendations.add("Just a thought course: <a href='https://healthify.nz/apps/m/managing-insomnia-just-a-thought-course/' target='_blank'>https://healthify.nz/apps/m/managing-insomnia-just-a-thought-course/</a>");
-
+  // Display recommendations
   displayRecommendations();
+
+  // Display the other resources
+  displayOtherResources();
 }
 
-    function displayRecommendations() {
+function displayRecommendations() {
   // Clear the question display area
   document.getElementById('questionDiv').innerHTML = '';
-
-  // Create an unordered list element for recommendations
-  let ul = document.createElement('ul');
-
-  // Loop through the recommendations and add each one as a list item
-  recommendations.forEach(recommendation => {
-    let li = document.createElement('li');
-    li.innerHTML = recommendation;
-    ul.appendChild(li);
-  });
 
   // Create the accordion button
   let accordion = document.createElement('button');
@@ -306,7 +315,22 @@ function generateRecommendations() {
   // Show the recommendations with a heading
   const recommendationsDiv = document.getElementById('recommendationsDiv');
   recommendationsDiv.innerHTML = "<h2>Recommendations</h2>";
-  recommendationsDiv.appendChild(ul);
+
+  // Check if there is more than one recommendation
+  if (recommendations.size > 1) {
+    let ul = document.createElement('ul');
+    recommendations.forEach(recommendation => {
+      let li = document.createElement('li');
+      li.innerHTML = recommendation;
+      ul.appendChild(li);
+    });
+    recommendationsDiv.appendChild(ul);
+  } else if (recommendations.size === 1) {
+    let p = document.createElement('p');
+    p.innerHTML = Array.from(recommendations)[0];  // Convert set to array and get the first element
+    recommendationsDiv.appendChild(p);
+  }
+
   recommendationsDiv.appendChild(accordion);
   recommendationsDiv.appendChild(panel);
   recommendationsDiv.classList.remove('hidden');
@@ -328,9 +352,23 @@ function generateRecommendations() {
 }
 
 
+
 function updateProgressBar(currentQuestionIndex, totalQuestions) {
   const progressBar = document.getElementById('progressBar');
   const progress = (currentQuestionIndex / totalQuestions) * 100;
   progressBar.style.width = progress + '%';
   progressBar.innerText = Math.round(progress) + '%';
+}
+
+function displayOtherResources() {
+  const otherResourcesDiv = document.getElementById('otherResourcesDiv');
+  otherResourcesDiv.innerHTML = `
+    <h2>Other Resources</h2>
+    <ul>
+      <li>Te Kete Sleep resource: <a href='https://healthify.nz/tools/t/te-kete-haerenga-and-sleep/' target='_blank'>Te Kete Sleep resource on Healthify</a></li>
+      <li>Sleep apps: <a href='https://healthify.nz/apps/s/sleep-apps/' target='_blank'>Sleep App Reviews on Healthify</a></li>
+      <li>Just a thought course: <a href='https://healthify.nz/apps/m/managing-insomnia-just-a-thought-course/' target='_blank'>Just a Thought Insomnia Course</a></li>
+    </ul>
+  `;
+  otherResourcesDiv.classList.remove('hidden');
 }
