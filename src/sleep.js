@@ -119,8 +119,9 @@
       progressBar.innerText = '0%';
 
 
-      // Hide the Start button
+      // Hide the Start and Print button
       document.getElementById('startButton').style.display = 'none';
+      document.getElementById('printButton').style.display = 'none'
 
   // Show the questionDiv
   document.getElementById('questionDiv').classList.remove('hidden');
@@ -149,11 +150,10 @@
     otherResourcesDiv.innerText = '';
     otherResourcesDiv.classList.add('hidden');
 
-
 }
 
+// Modified displayQuestion function to include Back and Skip buttons
 function displayQuestion(index) {
-
   updateProgressBar(index, questions.length);
 
   const questionDiv = document.getElementById('questionDiv');
@@ -169,22 +169,46 @@ function displayQuestion(index) {
     html += `<label><input type="radio" name="q${index}" value="${option}" onclick="handleUserInput(${index}, '${option}')">${option}</label><br>`;
   });
 
+  // Append Back and Skip buttons
+  html += `<button onclick="handleBackClick(${index})"${index === 0 ? ' disabled' : ''}>Back</button>`;
+  html += `<button onclick="handleSkipClick(${index})">Skip</button>`;
+
   document.getElementById('questionDiv').innerHTML = html;
 }
 
+// Function to handle Back button click
+function handleBackClick(index) {
+  // Navigate to the previous question by decrementing the index
+  displayQuestion(index - 1);
+}
 
-    function handleUserInput(index, answer) {
-      const questionID = questions[index].id;
-      userAnswers[questionID] = answer;
+// Function to handle Skip button click
+function handleSkipClick(index) {
+  // Navigate to the next question by incrementing the index
+  displayQuestion(index + 1);
+}
 
-      // Here, you can include logic to decide which question should be next
-      displayQuestion(index + 1);
-    }
+// Modified handleUserInput function
+function handleUserInput(index, answer) {
+  const questionID = questions[index].id;
+  userAnswers[questionID] = answer;
 
-      // Initialize empty Set for unique recommendations
-      let recommendations = new Set();
+  // Navigate to the next question by incrementing the index
+  displayQuestion(index + 1);
+}
 
-      // ...
+
+
+function handleUserInput(index, answer) {
+  const questionID = questions[index].id;
+  userAnswers[questionID] = answer;
+
+  // Here, you can include logic to decide which question should be next
+  displayQuestion(index + 1);
+}
+
+// Initialize empty Set for unique recommendations
+let recommendations = new Set();
 
 //Defines criteria to display the sleep restriction advice in generateRecommendations
 function sleepRestrictionCondition(userAnswers) {
@@ -349,6 +373,12 @@ function displayRecommendations() {
   // Change button text to 'Restart' and show the button
   document.getElementById('startButton').style.display = 'block';
   document.getElementById('startButton').innerText = 'Restart';
+
+
+  // Show the Print button
+document.getElementById('printButton').style.display = 'block';
+
+
 }
 
 
@@ -372,3 +402,17 @@ function displayOtherResources() {
   `;
   otherResourcesDiv.classList.remove('hidden');
 }
+
+function printQuestionnaire() {
+  // Find the accordion button for show answers
+  const accordion = document.querySelector('.accordion');
+  
+  // Simulate a click to expand the show answers
+  accordion.click();
+  
+  // Initiate print dialog
+  window.print();
+}
+
+
+

@@ -102,3 +102,8 @@ input[type="radio"] {
   line-height: 30px;
   color: white;
 }
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
