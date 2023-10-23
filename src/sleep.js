@@ -5,102 +5,102 @@
     const questions = [
       {
         id: 1,
-        text: "Do you have trouble falling asleep, staying asleep or waking up early at least three nights a week for at least the last month?",
+        text: "1. Do you have trouble falling asleep, staying asleep or waking up early at least three nights a week for at least the last month?",
         options: ["No", "Yes"]
       },
       {
         id: 2,
-        text: "Does this interfere with your activities the next day (such as feeling unrefreshed in the morning, fatigued, unable to concentrate, or feeling irritable)?",
+        text: "2. Does this interfere with your activities the next day (such as feeling unrefreshed in the morning, fatigued, unable to concentrate, or feeling irritable)?",
         options: ["No", "Yes"]
       },
       {
         id: 3,
-        text: "Are you a shift worker?",
+        text: "3. Are you a shift worker?",
         options: ["No", "Yes"]
       },
       {
         id: 4,
-        text: "Is your bedroom hot and uncomfortable?",
+        text: "4. Is your bedroom hot and uncomfortable?",
         options: ["No", "Yes"]
       },
       {
         id: 5,
-        text: "Do you drink alcohol, nicotine (cigarettes) or caffeine (coffee, cola, tea, chocolate, energy drinks) in the evenings? ",
+        text: "5. Do you drink alcohol, nicotine (cigarettes) or caffeine (coffee, cola, tea, chocolate, energy drinks) in the evenings? ",
         options: ["No", "Yes"]
       },
       {
         id: 6,
-        text: "Do you frequently nap during the day or have highly irregular and variable bedtimes or rising times? ",
+        text: "6. Do you frequently nap during the day or have highly irregular and variable bedtimes or rising times? ",
         options: ["No", "Yes"]
       },
       {
         id: 7,
-        text: "Do you engage in mentally stimulating, moderate to strenuous exercise or emotionally upsetting activities within a couple of hours of bedtime?",
+        text: "7. Do you engage in mentally stimulating, moderate to strenuous exercise or emotionally upsetting activities within a couple of hours of bedtime?",
         options: ["No", "Yes"]
       },
       {
         id: 8,
-        text: "Do you frequently use the bed for activities other than sleep or intimacy? (e.g., television watching, reading, studying, snacking, thinking, planning)",
+        text: "8. Do you frequently use the bed for activities other than sleep or intimacy? (e.g., television watching, reading, studying, snacking, thinking, planning)",
         options: ["No", "Yes"]
       },
       {
         id: 9,
-        text: "During the past month, have you been bothered by feeling down, depressed or hopeless?",
+        text: "9. During the past month, have you been bothered by feeling down, depressed or hopeless?",
         options: ["No", "Yes"]
       },
       {
         id: 10,
-        text: "Or bothered by having little interest or pleasure in doing things?",
+        text: "10. Or bothered by having little interest or pleasure in doing things?",
         options: ["No", "Yes"]
       },
       {
         id: 11,
-        text: "Over the last two weeks, have you been bothered by feeling nervous, anxious, or on edge?",
+        text: "11. Over the last two weeks, have you been bothered by feeling nervous, anxious, or on edge?",
         options: ["No", "Yes"]
       },
       {
         id: 12,
-        text: "Over the last two weeks, have you been bothered by being unable to stop or control worrying? ",
+        text: "12. Over the last two weeks, have you been bothered by being unable to stop or control worrying? ",
         options: ["No", "Yes"]
       },
       {
         id: 13,
-        text: "Do you snore very loudly at night? ",
+        text: "13. Do you snore very loudly at night? ",
         options: ["No", "Yes"]
       },
       {
         id: 14,
-        text: "Do you fall asleep during the day in waiting rooms or as a passenger in a vehicle? ",
+        text: "14. Do you fall asleep during the day in waiting rooms or as a passenger in a vehicle? ",
         options: ["No", "Yes"]
       },
       {
         id: 15,
-        text: "Do you have any significant health problems affecting your sleep quality, such as pain, difficulty breathing, acid reflux, or night cough? ",
+        text: "15. Do you have any significant health problems affecting your sleep quality, such as pain, difficulty breathing, acid reflux, or night cough? ",
         options: ["No", "Yes"]
       },
       {
         id: 16,
-        text: "When you are asleep, do you sleepwalk, sleep talk, grind your teeth, have restless legs or anything else you would consider unusual? ",
+        text: "16. When you are asleep, do you sleepwalk, sleep talk, grind your teeth, have restless legs or anything else you would consider unusual? ",
         options: ["No", "Yes"]
       },
       {
         id: 17,
-        text: "Do you ever feel the need to reduce the amount of alcohol you drink?",
+        text: "17. Do you ever feel the need to reduce the amount of alcohol you drink?",
         options: ["No", "Yes"]
       },
       {
         id: 18,
-        text: "Do you ever feel the need to cut down on your non-prescription or recreational drug use?",
+        text: "18. Do you ever feel the need to cut down on your non-prescription or recreational drug use?",
         options: ["No", "Yes"]
       },
       {
         id: 19,
-        text: "Do you go to bed late at night (e.g. after midnight?)",
+        text: "19. Do you go to bed late at night (e.g. after midnight?)",
         options: ["No", "Yes"]
       },
       {
         id: 20,
-        text: "When you can, do you prefer to sleep in late in the morning ",
+        text: "20. When you can, do you prefer to sleep in late in the morning ",
         options: ["No", "Yes"]
       }
     ];
@@ -112,23 +112,16 @@
       document.getElementById('progressBarContainer').style.display = 'flex';
 
       // Initialise the progress bar to 0%
-      updateProgressBar(-1, questions.length);
-
-      const progressBar = document.getElementById('progressBar');
-      progressBar.style.width = '0%';
-      progressBar.innerText = '0%';
-
+      updateProgressBar(0, questions.length);
 
       // Hide the Start button
       document.getElementById('startButton').style.display = 'none';
 
-
-  // Show the questionDiv
-  document.getElementById('questionDiv').classList.remove('hidden');
+      // Show the questionDiv
+      document.getElementById('questionDiv').classList.remove('hidden');
 
         // Reset questionnaire state
       resetQuestionnaire();
-
 
       // Begin the questionnaire
       displayQuestion(0);
@@ -202,16 +195,6 @@ function handleUserInput(index, answer) {
   displayQuestion(index + 1);
 }
 
-
-
-function handleUserInput(index, answer) {
-  const questionID = questions[index].id;
-  userAnswers[questionID] = answer;
-
-  // Here, you can include logic to decide which question should be next
-  displayQuestion(index + 1);
-}
-
 // Initialize empty Set for unique recommendations
 let recommendations = new Set();
 
@@ -244,12 +227,12 @@ function generateRecommendations() {
   // Check if meets the sleep restriction recommendation condition
   if (sleepRestrictionCondition(userAnswers)) {
     const everyNoText = `
-  <p>If none of the above applies and you still have a sleep problem, you may have chronic insomnia. This is where you have a sleep disorder; there is no other explanation. It is very common and can be helped by several treatments.</p>
-  <p>Go to bed later and spend fewer hours in bed. This is sleep restriction or time in bed restriction (see below). </p>
-  <p>Other medicines can help you sleep but are difficult to stop once you take them regularly. </p>
+  <p>If none of the above applies and you still have a sleep problem, you may have chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.</p>
+  <p>One treatment option is sleep restriction or time in bed restriction. This is where you go to bed later and spend fewer hours in bed.</p>
+  <p>Other medicines can help you sleep but are difficult to stop once you take them regularly and also tend to lose effectiveness. </p>
   <h3>Time in bed restriction </h3>
   <p>Ensure the diagnosis is most likely to be chronic insomnia, the old name is primary insomnia. You've answered no to all the questions so other common conditions are less likely.<p>
-  <p>If for your work you drive vehicles, operate heavy machinery, or do delicate procedures, e.g. surgeons, you should consider treatment during your vacation- sleep deprivation is a short-term safety risk.</p>
+  <p>If for work you drive vehicles, operate heavy machinery, or do delicate procedures, e.g. surgeons, you should consider treatment during your vacation- sleep deprivation is a short-term safety risk.</p>
   <p>Estimate time spent in bed versus time spent asleep. If you cannot do this from memory, you can use a sleep diary if necessary. Work out what time you go to bed and wake up. Work out how long you stay asleep. Usually, there is a mismatch, e.g. 9 hours in bed and 6 hours asleep. would mean you are diluting their good sleep over 9 rather than 6 hours. Try go to bed later and wake up simultaneously with the rest of your household. Do only quiet, relaxing activities before bedtime. These activities must be done outside the bed and not lying down to avoid naps, which can disrupt the routine. We recommend you keep this new time in bed for two weeks before making any adjustments. People usually reportd that the quality of their sleep improves as they feel they are starting to have a deep sleep and the sleep period is consolidated.</p>
   <p>After two weeks: Nothing else is needed if you is sleeping better and functioning well. Many people prefer to continue on the bed restriction schedule as they find it very effective.</p>
   <p>If you are sleeping better but feel sleep deprived the next day, you may wish to add 30 minutes to the time allowed in bed for another two weeks and continue doing so until the feelings of sleep deprivation disappear while still maintaining continuous sleep at night </p>
@@ -263,11 +246,11 @@ function generateRecommendations() {
   }
 
   if (userAnswers[4] === 'Yes') {
-  recommendations.add("You answered that your bedroom is hot and uncomfortable. You should attend to this.");
+  recommendations.add("You answered that your bedroom is hot and uncomfortable. You should attend to this if you aren't happy with your sleep.");
   }
 
   if (userAnswers[5] === 'Yes') {
-  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. You should attend to this. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>Sleep and Caffeine page</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>Food and Drink effects on Sleep page on Healthify</a>");
+  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. You should attend to this if you aren't happy with your sleep. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>Sleep and Caffeine page</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>Food and Drink effects on Sleep page on Healthify</a>");
   }
 
   if (userAnswers[6] === 'Yes') {
@@ -291,7 +274,7 @@ function generateRecommendations() {
   }
 
   if (userAnswers[13] === 'Yes' || userAnswers[14] === 'Yes') {
-  recommendations.add("You may have sleep apnoea (OSA). Discuss this with your GP as this could be a factor in your sleep quality. If you stop breathing at night and have a morning headache and a dry mouth, it will likely be sleep apnoea. See <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
+  recommendations.add("You said you snore loudly. If you stop breathing at night and have a morning headache and a dry mouth, you likely have Obstructive Sleep Apnoea (OSA). You may wish to see your GP about this. See <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
   }
 
   if (userAnswers[15] === 'Yes') {
@@ -299,11 +282,11 @@ function generateRecommendations() {
   }
 
   if (userAnswers[16] === 'Yes') {
-  recommendations.add("You may have restless legs or a brain issue. The technical term for this is a parasomnia. Discuss this with your GP as this could be a factor in your sleep quality.");
+  recommendations.add("You may have restless legs or some other issue with your brain (e.g. sleep walking, sleep talking, etc). The technical term for this is a parasomnia. Discuss this with your GP as this could be a factor in your sleep quality.");
   }
 
   if (userAnswers[17] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Try and reduce this or discuss this with your GP");
+  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Try and reduce this, discuss this with your GP, or self refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support");
   }
 
   if (userAnswers[18] === 'Yes') {
@@ -397,7 +380,12 @@ function updateProgressBar(currentQuestionIndex, totalQuestions) {
   const progressBar = document.getElementById('progressBar');
   const progress = (currentQuestionIndex / totalQuestions) * 100;
   progressBar.style.width = progress + '%';
-  progressBar.innerText = Math.round(progress) + '%';
+  
+  if (progress > 0) {
+    progressBar.innerText = Math.round(progress) + '%';
+  } else {
+    progressBar.innerText = '';  // Empty string when progress is 0
+  }
 }
 
 function displayOtherResources() {
