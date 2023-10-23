@@ -114,6 +114,9 @@
       // Initialise the progress bar to 0%
       updateProgressBar(0, questions.length);
 
+      // Hide the instructionsDiv
+      document.getElementById('instructionsDiv').style.display = 'none';
+
       // Hide the Start button
       document.getElementById('startButton').style.display = 'none';
 
@@ -213,8 +216,15 @@ function sleepRestrictionCondition(userAnswers) {
 
     return condition1 || condition2 || condition3;
 }
-
  
+function allAnswersNo(userAnswers) {
+  // Get all values (answers) from the userAnswers object
+  const answersArray = Object.values(userAnswers);
+
+  // Check if every answer is 'No'
+  return answersArray.every(answer => answer === 'No');
+}
+
 
 
 function generateRecommendations() {
@@ -227,22 +237,34 @@ function generateRecommendations() {
   // Check if meets the sleep restriction recommendation condition
   if (sleepRestrictionCondition(userAnswers)) {
     const everyNoText = `
-  <p>If none of the above applies and you still have a sleep problem, you may have chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.</p>
-  <p>One treatment option is sleep restriction or time in bed restriction. This is where you go to bed later and spend fewer hours in bed.</p>
-  <p>Other medicines can help you sleep but are difficult to stop once you take them regularly and also tend to lose effectiveness. </p>
+  <p>If none of the questions apply and you still have a sleep problem, you may have chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.</p>
   <h3>Time in bed restriction </h3>
+  <p>One treatment option is sleep restriction or time in bed restriction. This is where you go to bed later and spend fewer hours in bed.</p>
   <p>Ensure the diagnosis is most likely to be chronic insomnia, the old name is primary insomnia. You've answered no to all the questions so other common conditions are less likely.<p>
   <p>If for work you drive vehicles, operate heavy machinery, or do delicate procedures, e.g. surgeons, you should consider treatment during your vacation- sleep deprivation is a short-term safety risk.</p>
   <p>Estimate time spent in bed versus time spent asleep. If you cannot do this from memory, you can use a sleep diary if necessary. Work out what time you go to bed and wake up. Work out how long you stay asleep. Usually, there is a mismatch, e.g. 9 hours in bed and 6 hours asleep. would mean you are diluting their good sleep over 9 rather than 6 hours. Try go to bed later and wake up simultaneously with the rest of your household. Do only quiet, relaxing activities before bedtime. These activities must be done outside the bed and not lying down to avoid naps, which can disrupt the routine. We recommend you keep this new time in bed for two weeks before making any adjustments. People usually reportd that the quality of their sleep improves as they feel they are starting to have a deep sleep and the sleep period is consolidated.</p>
   <p>After two weeks: Nothing else is needed if you is sleeping better and functioning well. Many people prefer to continue on the bed restriction schedule as they find it very effective.</p>
   <p>If you are sleeping better but feel sleep deprived the next day, you may wish to add 30 minutes to the time allowed in bed for another two weeks and continue doing so until the feelings of sleep deprivation disappear while still maintaining continuous sleep at night </p>
   <p>If you are not sleeping better, you may wish to reduce the time in bed by 30 minutes (but not to less than five hours at night). Try each option for at least two weeks before making another change. If you are not sleeping better at five hours per night, you may wish to get some advice from a sleep specialist. You may need an overnight sleep study to see if there are other causes of insomnia, e.g. sleep apnoea or a movement disorder.</p>
+  <h3>Medication</h3>
+  <p>You could consider trying <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin.</a></p>
+  <p>Other medicines can help you sleep but are difficult to stop once you take them regularly and they also tend to lose effectiveness over time. </p>
+  <h3>Other</h3>
+  <p>A special type of therapy can be helpful called CBTi - Cognitive Behavioural Therapy for Insomnia. Just a thought course: <a href='https://healthify.nz/apps/m/managing-insomnia-just-a-thought-course/' target='_blank'>Just a Thought Insomnia Course</a></p>
   `;
     recommendations.add(everyNoText);
   }
 
+  if (allAnswersNo(userAnswers)) {
+    recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire.")
+  }
+
+  if (userAnswers[1] === 'Yes' || userAnswers[2] === 'Yes') {
+  recommendations.add("Not being able to get to sleep, or stay asleep can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
+  }
+
   if (userAnswers[3] === 'Yes') {
-  recommendations.add("You answered yes to being a shift worker. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Shift Work page on Healthify</a>. You may wish to see a sleep specialist if you are having sleep problems.");
+  recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, as a result of a misalignment between the body and the sleep-wake cycle. This can result in mood problems, poor work performance, higher accident risk and added health problems. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
   }
 
   if (userAnswers[4] === 'Yes') {
@@ -250,11 +272,11 @@ function generateRecommendations() {
   }
 
   if (userAnswers[5] === 'Yes') {
-  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. You should attend to this if you aren't happy with your sleep. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>Sleep and Caffeine page</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>Food and Drink effects on Sleep page on Healthify</a>");
+  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. These substances are known as stimultants, which can give the feeling of increased alertness but at the same time, cause difficulty in getting to sleep. You should attend to this if you aren't happy with your sleep. Learn more about stimulants and sleep: See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>Sleep and Caffeine page</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>Food and Drink effects on Sleep page on Healthify</a>");
   }
 
   if (userAnswers[6] === 'Yes') {
-  recommendations.add("You answered yes to frequent napping. This may be causing your sleep problem. Napping should be limited to about 30 minutes and be done before 1500 hrs.");
+  recommendations.add("You answered yes to frequent napping. This may be causing your sleep problem. However it may be due sleep deprivation from another cause, e.g. sleep apnoea. Regular bed and rising times are good sleep hygiene approaches. Napping should be limited to about 30 minutes and be done before 1500 hrs.");
   }
 
   if (userAnswers[7] === 'Yes') {
@@ -274,7 +296,7 @@ function generateRecommendations() {
   }
 
   if (userAnswers[13] === 'Yes' || userAnswers[14] === 'Yes') {
-  recommendations.add("You said you snore loudly. If you stop breathing at night and have a morning headache and a dry mouth, you likely have Obstructive Sleep Apnoea (OSA). You may wish to see your GP about this. See <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
+  recommendations.add("You said you snore loudly. If you stop breathing at night (called 'apnoea') and have a morning headache and a dry mouth, you likely have Obstructive Sleep Apnoea (OSA). You may wish to see your GP about this. See <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
   }
 
   if (userAnswers[15] === 'Yes') {
@@ -282,11 +304,11 @@ function generateRecommendations() {
   }
 
   if (userAnswers[16] === 'Yes') {
-  recommendations.add("You may have restless legs or some other issue with your brain (e.g. sleep walking, sleep talking, etc). The technical term for this is a parasomnia. Discuss this with your GP as this could be a factor in your sleep quality.");
+  recommendations.add("You may have restless legs or some other issue with your brain (e.g. sleep walking, sleep talking, etc). The technical term for this is a parasomnia. If your bedsheets are in complete disarray or you have ever woken up with unexplained injuries then parasomnia is more likely. Discuss this with your GP as this could be a factor in your sleep quality.");
   }
 
   if (userAnswers[17] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Try and reduce this, discuss this with your GP, or self refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support");
+  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Try and reduce this, discuss this with your GP, or self refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra suppor. See <a href='https://healthify.nz/hauora-wellbeing/a/alcohol-and-harmful-drinking/' target='_blank'>alcohol page on Healthify</a>");
   }
 
   if (userAnswers[18] === 'Yes') {

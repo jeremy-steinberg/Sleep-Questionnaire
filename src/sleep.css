@@ -7,12 +7,13 @@
   margin-bottom: 1em;
 }
 /* Main content divs */
-#questionDiv, #recommendationsDiv, #otherResourcesDiv {
+#questionDiv, #recommendationsDiv, #otherResourcesDiv, #instructionsDiv {
   background-color: white;
   padding: 1em;
   margin: 1em;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  line-height: 1.5em;
 }
   
   #recommendationsDiv, #otherResourcesDiv {
