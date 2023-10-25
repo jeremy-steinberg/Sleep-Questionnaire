@@ -202,7 +202,7 @@ function handleUserInput(index, answer) {
 let recommendations = new Set();
 
 //Defines criteria to display the sleep restriction advice in generateRecommendations
-function sleepRestrictionCondition(userAnswers) {
+function sleepRestrictionConditionWithoutCause(userAnswers) {
     // Create an array of all keys except for the first and second question
     const otherQuestions = Object.keys(userAnswers).filter(id => id !== '1' && id !== '2');
 
@@ -225,42 +225,45 @@ function allAnswersNo(userAnswers) {
   return answersArray.every(answer => answer === 'No');
 }
 
+function sleepRestrictionWithOtherCauseCondition(userAnswers) {
+  const questionsToCheck = ['4', '5', '6', '7', '8', '9', '10', '11', '12', '15', '16', '17', '18', '19', '20'];
+  return questionsToCheck.some(question => userAnswers[question] === 'Yes');
+}
 
 
 function generateRecommendations() {
   // Implement your logic to generate recommendations
   // based on the answers in userAnswers
-
   // Convert the object values to an array
   const answersArray = Object.values(userAnswers);
-
-  // Check if meets the sleep restriction recommendation condition
-  if (sleepRestrictionCondition(userAnswers)) {
-    const everyNoText = `
-  <p>If none of the questions apply and you still have a sleep problem, you may have chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.</p>
-  <h3>Time in bed restriction </h3>
+  const sleepRestrictionText = `
+  <h3>Chronic Insomnia Treatments</h3>
+  <h4>Time in bed restriction </h4>
   <p>One treatment option is sleep restriction or time in bed restriction. This is where you go to bed later and spend fewer hours in bed.</p>
-  <p>Ensure the diagnosis is most likely to be chronic insomnia, the old name is primary insomnia. You've answered no to all the questions so other common conditions are less likely.<p>
   <p>If for work you drive vehicles, operate heavy machinery, or do delicate procedures, e.g. surgeons, you should consider treatment during your vacation- sleep deprivation is a short-term safety risk.</p>
   <p>Estimate time spent in bed versus time spent asleep. If you cannot do this from memory, you can use a sleep diary if necessary. Work out what time you go to bed and wake up. Work out how long you stay asleep. Usually, there is a mismatch, e.g. 9 hours in bed and 6 hours asleep. would mean you are diluting their good sleep over 9 rather than 6 hours. Try go to bed later and wake up simultaneously with the rest of your household. Do only quiet, relaxing activities before bedtime. These activities must be done outside the bed and not lying down to avoid naps, which can disrupt the routine. We recommend you keep this new time in bed for two weeks before making any adjustments. People usually reportd that the quality of their sleep improves as they feel they are starting to have a deep sleep and the sleep period is consolidated.</p>
   <p>After two weeks: Nothing else is needed if you is sleeping better and functioning well. Many people prefer to continue on the bed restriction schedule as they find it very effective.</p>
   <p>If you are sleeping better but feel sleep deprived the next day, you may wish to add 30 minutes to the time allowed in bed for another two weeks and continue doing so until the feelings of sleep deprivation disappear while still maintaining continuous sleep at night </p>
   <p>If you are not sleeping better, you may wish to reduce the time in bed by 30 minutes (but not to less than five hours at night). Try each option for at least two weeks before making another change. If you are not sleeping better at five hours per night, you may wish to get some advice from a sleep specialist. You may need an overnight sleep study to see if there are other causes of insomnia, e.g. sleep apnoea or a movement disorder.</p>
-  <h3>Medication</h3>
+  <h4>Medication</h4>
   <p>You could consider trying <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin.</a></p>
   <p>Other medicines can help you sleep but are difficult to stop once you take them regularly and they also tend to lose effectiveness over time. </p>
-  <h3>Other</h3>
+  <h4>Other</h4>
   <p>A special type of therapy can be helpful called CBTi - Cognitive Behavioural Therapy for Insomnia. Just a thought course: <a href='https://healthify.nz/apps/m/managing-insomnia-just-a-thought-course/' target='_blank'>Just a Thought Insomnia Course</a></p>
   `;
-    recommendations.add(everyNoText);
-  }
-
-  if (allAnswersNo(userAnswers)) {
-    recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire.")
-  }
+  const everyNoText = `
+  It sounds like none of the questions from this questionnaire apply. If despite this you still have a sleep problem you may have a condition called chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.
+  `;
+  const chronicInsomniaDiagnosisAdditional = `
+  If you are struggling with sleep the above may not be the only cause. It is possible to also have a condition called chronic insomnia. This is a very common condition where you have a sleep disorder without any particular explanation. If fixing the above doesn't work or isn't possible, you could explore treatments for chronic insomnia.
+  `;
 
   if (userAnswers[1] === 'Yes' || userAnswers[2] === 'Yes') {
-  recommendations.add("Not being able to get to sleep, or stay asleep can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
+    recommendations.add("Not being able to get to sleep, or stay asleep can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
+  }  
+
+  if (allAnswersNo(userAnswers)) {
+    recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire.");
   }
 
   if (userAnswers[3] === 'Yes') {
@@ -280,44 +283,61 @@ function generateRecommendations() {
   }
 
   if (userAnswers[7] === 'Yes') {
-  recommendations.add("You answered yes to engaging in mentally stimulating, moderate to strenous exercise, or emotionally upsetting acitvities within a couple hours of bedtime. This may be causing or contributing to your sleep problem. You may wish to change these behaviours.");
-  }
+  recommendations.add("You answered yes to engaging in mentally stimulating, moderate to strenous exercise, or emotionally upsetting acitvities within a couple hours of bedtime. This may be causing or contributing to your sleep problem. You may wish to change these behaviours."); 
+ }
 
   if (userAnswers[8] === 'Yes') {
   recommendations.add("You answered yes to frequently using the bed for activities other than sleep or intimacy. This may be causing or contributing to your sleep problem. You may wish to change these behaviours");
+ }
+
+ //check for mood or anxiety problem
+  const moodOrAnxiety = [userAnswers[11], userAnswers[12]].some(answer => answer === 'Yes');
+  const moodOrDepression = [userAnswers[9], userAnswers[10]].some(answer => answer === 'Yes');
+
+  if (moodOrAnxiety || moodOrDepression) {
+    if (moodOrAnxiety) {
+      recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality.");
+    } else if (moodOrDepression) {
+      recommendations.add("You may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality.");
+    }
   }
 
-  if (userAnswers[9] === 'Yes' || userAnswers[10] === 'Yes') {
-  recommendations.add("You may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality.");
-  }
-
-  if (userAnswers[11] === 'Yes' || userAnswers[12] === 'Yes') {
-  recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality.");
-  }
 
   if (userAnswers[13] === 'Yes' || userAnswers[14] === 'Yes') {
-  recommendations.add("You said you snore loudly. If you stop breathing at night (called 'apnoea') and have a morning headache and a dry mouth, you likely have Obstructive Sleep Apnoea (OSA). You may wish to see your GP about this. See <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
+  recommendations.add("You said you snore loudly. If you stop breathing at night (called 'apnoea') and have a morning headache and a dry mouth, you likely have Obstructive Sleep Apnoea (OSA). You may wish to see your GP about this. You can answer a few more questions with the <a href='https://jackofallorgans.com/stopbang'target='_blank'>STOP-BANG tool</a> here to see how likely the diagnosis is. See also <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
   }
 
   if (userAnswers[15] === 'Yes') {
-  recommendations.add("You said you have a significant health problem affecting sleep quality. Discuss this with your GP as this could be a factor in your sleep quality.");
-  }
+  recommendations.add("You said you have a significant health problem affecting sleep quality. Discuss this with your GP as this could be a factor in your sleep quality.");  
+ }
 
   if (userAnswers[16] === 'Yes') {
   recommendations.add("You may have restless legs or some other issue with your brain (e.g. sleep walking, sleep talking, etc). The technical term for this is a parasomnia. If your bedsheets are in complete disarray or you have ever woken up with unexplained injuries then parasomnia is more likely. Discuss this with your GP as this could be a factor in your sleep quality.");
-  }
+ }
 
   if (userAnswers[17] === 'Yes') {
   recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Try and reduce this, discuss this with your GP, or self refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra suppor. See <a href='https://healthify.nz/hauora-wellbeing/a/alcohol-and-harmful-drinking/' target='_blank'>alcohol page on Healthify</a>");
-  }
+ }
 
   if (userAnswers[18] === 'Yes') {
   recommendations.add("You said yes to feeling the need to reduce the amount of non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Or discuss this with your GP.");
-  }
+ }
 
   if (userAnswers[19] === 'Yes' || userAnswers[20] === 'Yes') {
   recommendations.add("You may have a condition called delayed sleep phase disorder. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night.");
-  }
+ }
+
+  // Check if meets the sleep restriction recommendation condition, without another cause
+  if (sleepRestrictionConditionWithoutCause(userAnswers)) {
+  recommendations.add(everyNoText);
+  recommendations.add(sleepRestrictionText);
+}
+
+  // Check if meets the sleep restriction recommendation condition, with another cause
+  if (sleepRestrictionWithOtherCauseCondition(userAnswers)) {
+  recommendations.add(chronicInsomniaDiagnosisAdditional);
+  recommendations.add(sleepRestrictionText);
+}
 
   // Display recommendations
   displayRecommendations();
@@ -424,11 +444,17 @@ function displayOtherResources() {
 }
 
 function printQuestionnaire() {
-  // Find the accordion button for show answers
+  // Find the accordion button for showing answers
   const accordion = document.querySelector('.accordion');
   
-  // Simulate a click to expand the show answers
-  accordion.click();
+  // Find the panel that is the next sibling element of the accordion
+  const panel = accordion.nextElementSibling;
+  
+  // Check if the accordion is already open by checking the display property of the panel
+  if (panel.style.display !== "block") {
+    // If it's not open, simulate a click to open it
+    accordion.click();
+  }
   
   // Initiate print dialog
   window.print();
