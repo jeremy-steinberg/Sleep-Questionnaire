@@ -10,7 +10,7 @@
       },
       {
         id: 2,
-        text: "2. Does this interfere with your activities the next day (such as feeling unrefreshed in the morning, fatigued, unable to concentrate, or feeling irritable)?",
+        text: "2. Does your sleep affect your activities the next day (such as feeling unrefreshed in the morning, fatigued, unable to concentrate, or feeling irritable)?",
         options: ["No", "Yes"]
       },
       {
@@ -201,22 +201,28 @@ function handleUserInput(index, answer) {
 // Initialize empty Set for unique recommendations
 let recommendations = new Set();
 
-//Defines criteria to display the sleep restriction advice in generateRecommendations
-function sleepRestrictionConditionWithoutCause(userAnswers) {
-    // Create an array of all keys except for the first and second question
-    const otherQuestions = Object.keys(userAnswers).filter(id => id !== '1' && id !== '2');
 
-    // Check if all other answers are 'No'
-    const allOthersNo = otherQuestions.every(id => userAnswers[id] === 'No');
+// Defines criteria for having a sleep problem. Returns True if 1 OR 2 are "Yes". Returns False if both 1 AND 2 are "No"
+function sleepProblemCondition(userAnswers) {
+  // Check the conditions for question 1 and 2
+  const condition1or2 = userAnswers['1'] === 'Yes' || userAnswers['2'] === 'Yes';
+  const bothNo = userAnswers['1'] === 'No' && userAnswers['2'] === 'No';
 
-    // Check the conditions for question 1 and 2
-    const condition1 = userAnswers['1'] === 'Yes' && allOthersNo;
-    const condition2 = userAnswers['2'] === 'Yes' && allOthersNo;
-    const condition3 = userAnswers['1'] === 'Yes' && userAnswers['2'] === 'Yes' && allOthersNo;
-
-    return condition1 || condition2 || condition3;
+  return condition1or2 && !bothNo;
 }
- 
+
+// Returns True if "Yes" to any question numbered 3 and above.
+function couldSleepBeImprovedCondition(userAnswers) {
+  for (const question in userAnswers) {
+    if (question !== '1' && question !== '2' && userAnswers[question] === 'Yes') {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+//Checks if every answer is No 
 function allAnswersNo(userAnswers) {
   // Get all values (answers) from the userAnswers object
   const answersArray = Object.values(userAnswers);
@@ -225,10 +231,32 @@ function allAnswersNo(userAnswers) {
   return answersArray.every(answer => answer === 'No');
 }
 
+// Returns True if has a sleep problem PLUS yes to one of the questions in the array
 function sleepRestrictionWithOtherCauseCondition(userAnswers) {
   const questionsToCheck = ['4', '5', '6', '7', '8', '9', '10', '11', '12', '15', '16', '17', '18', '19', '20'];
-  return questionsToCheck.some(question => userAnswers[question] === 'Yes');
+  
+  const hasOtherCauses = questionsToCheck.some(question => userAnswers[question] === 'Yes');
+  const hasSleepProblem = sleepProblemCondition(userAnswers);
+  
+  return hasOtherCauses && hasSleepProblem;
 }
+
+//Defines criteria to display the sleep restriction advice in generateRecommendations
+function sleepRestrictionConditionWithoutCause(userAnswers) {
+  // Create an array of all keys except for the first and second question
+  const otherQuestions = Object.keys(userAnswers).filter(id => id !== '1' && id !== '2');
+
+  // Check if all other answers are 'No'
+  const allOthersNo = otherQuestions.every(id => userAnswers[id] === 'No');
+
+  // Check the conditions for question 1 and 2
+  const condition1 = userAnswers['1'] === 'Yes' && allOthersNo;
+  const condition2 = userAnswers['2'] === 'Yes' && allOthersNo;
+  const condition3 = userAnswers['1'] === 'Yes' && userAnswers['2'] === 'Yes' && allOthersNo;
+
+  return condition1 || condition2 || condition3;
+}
+
 
 
 function generateRecommendations() {
@@ -252,18 +280,23 @@ function generateRecommendations() {
   <p>A special type of therapy can be helpful called CBTi - Cognitive Behavioural Therapy for Insomnia. Just a thought course: <a href='https://healthify.nz/apps/m/managing-insomnia-just-a-thought-course/' target='_blank'>Just a Thought Insomnia Course</a></p>
   `;
   const everyNoText = `
-  It sounds like none of the questions from this questionnaire apply. If despite this you still have a sleep problem you may have a condition called chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.
+  It sounds like none of the questions from this questionnaire apply. If despite this you still feel that you have a sleep problem you may have a condition called chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.
   `;
   const chronicInsomniaDiagnosisAdditional = `
   If you are struggling with sleep the above may not be the only cause. It is possible to also have a condition called chronic insomnia. This is a very common condition where you have a sleep disorder without any particular explanation. If fixing the above doesn't work or isn't possible, you could explore treatments for chronic insomnia.
   `;
-
-  if (userAnswers[1] === 'Yes' || userAnswers[2] === 'Yes') {
-    recommendations.add("Not being able to get to sleep, or stay asleep can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
-  }  
-
+  
   if (allAnswersNo(userAnswers)) {
     recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire.");
+  } else {
+      if (sleepProblemCondition(userAnswers)) {
+        recommendations.add("Having a sleep problem can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
+      } else {
+        recommendations.add("Based on your answers you may not have a sleep problem. ");
+        if (couldSleepBeImprovedCondition(userAnswers)){
+          recommendations.add("However based on the answers to the questions you could still take a look at the following recommendations if you wanted to try improve your sleep quality:")
+        }
+      }
   }
 
   if (userAnswers[3] === 'Yes') {
