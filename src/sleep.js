@@ -427,19 +427,20 @@ function generateRecommendations() {
   if (sleepRestrictionConditionWithoutCause(userAnswers)) {
   recommendations.add(everyNoText);
   recommendations.add(sleepRestrictionText);
-}
+  }
 
   // Check if meets the sleep restriction recommendation condition, with another cause
   if (sleepRestrictionWithOtherCauseCondition(userAnswers)) {
-  recommendations.add(chronicInsomniaDiagnosisAdditional);
-  recommendations.add(sleepRestrictionText);
-}
+    recommendations.add(chronicInsomniaDiagnosisAdditional);
+    recommendations.add(sleepRestrictionText);
+  }
 
   // Display recommendations
   displayRecommendations();
 
   // Display the other resources
   displayOtherResources();
+
 }
 
 function displayRecommendations() {
@@ -501,13 +502,31 @@ function displayRecommendations() {
   document.getElementById('startButton').style.display = 'block';
   document.getElementById('startButton').innerText = 'Restart';
 
+  // Create a 'Copy to Clipboard' button
+  const copyButton = document.createElement('button');
+  copyButton.innerHTML = 'Copy link of this page to Clipboard';
+  copyButton.id = 'copyButton';
+  copyButton.addEventListener('click', function() {
+    // Create a temporary textarea element to hold the URL
+    const tempTextarea = document.createElement('textarea');
+    tempTextarea.value = generateURL();  // Assuming generateURL() returns the URL as a string
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
+    
+  });
+
+  // Append the 'Copy to Clipboard' button to the recommendationsDiv
+  startAndPrint.appendChild(copyButton);
+
 
   // Show the Print button
-document.getElementById('printButton').style.display = 'block';
+  document.getElementById('printButton').style.display = 'block';
 
 
-// Show the credits Div
-document.getElementById('creditsDiv').style.display = 'block';
+  // Show the credits Div
+  document.getElementById('creditsDiv').style.display = 'block';
 
 
 }
@@ -557,4 +576,29 @@ function printQuestionnaire() {
 }
 
 
+// Add this function to generate a URL based on the user's answers
+function generateURL() {
+  const jsonString = JSON.stringify(userAnswers);
+  const base64String = btoa(jsonString);
+  const newURL = `${window.location.origin}${window.location.pathname}?data=${base64String}`;
+  
+  // Show the new URL to the user, for example, in an alert or some UI element
+  return newURL;
+}
 
+// Add this function to load answers from a URL
+function loadFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const base64String = urlParams.get('data');
+  
+  if (base64String) {
+    const jsonString = atob(base64String);
+    userAnswers = JSON.parse(jsonString);
+    document.getElementById('instructionsDiv').style.display = 'none';
+    // Re-generate recommendations based on these answers
+    generateRecommendations();
+  }
+}
+
+// Add this line to call loadFromURL when the page loads
+window.addEventListener("load", loadFromURL);
