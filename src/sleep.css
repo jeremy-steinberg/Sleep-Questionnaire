@@ -79,13 +79,6 @@ input[type="radio"] {
   border-top: none;
 }
 
-.question-text {
-    min-height: 70px;
-}
-
-.question-text {
-  padding-bottom: 0.5em !important;
-}
 
 /* Progress bar container */
 #progressBarContainer {
@@ -160,7 +153,7 @@ input[type="radio"]:checked + .boxed-radio::before {
 }
 
 /* Flex container */
-.flex-container {
+.radio-container {
   display: flex;
   flex-direction: column;  /* Stack children vertically */
   align-items: stretch;  /* Stretch children horizontally to fill the container */
@@ -170,4 +163,52 @@ input[type="radio"]:checked + .boxed-radio::before {
   display: flex;
   flex-direction: row;
   margin: 1em;
+}
+
+.mandatory-indicator {
+  color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+}
+
+
+/* Base class for all question text */
+.question-text {
+  min-height: 70px;
+  padding-bottom: 0.5em !important; /* Set a standard padding-bottom for all questions */
+}
+
+/* Modifier class for mandatory question text */
+.question-text-mandatory {
+  padding-bottom: 0.5em !important; /* Keep it the same as .question-text */
+}
+
+/* Helper text */
+.helper-text {
+  font-size: 0.8em; 
+  color: #ff0000; 
+  margin-top: -0.5em; 
+  margin-bottom: 1em; 
+  font-style: italic;  
+}
+
+/* Flex container for each question */
+.question-container {
+  display: flex;
+  align-items: flex-start; /* Align items to the top */
+}
+
+/* Flex item for radio buttons */
+.radio-container {
+  flex: 0 0 auto; /* Do not grow, do not shrink, auto basis */
+  margin-top: 0.5em; /* Optional: adjust according to your design */
+}
+
+/* Flex item for question text */
+.text-container {
+  flex: 1; /* Take up all available space */
+  padding-left: 1em; /* Space between radio and text */
 }

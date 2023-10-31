@@ -1,4 +1,5 @@
     // Initialize empty object for user answers
+
     let userAnswers = {};
 
     // Sample questions
@@ -25,7 +26,7 @@
       },
       {
         id: 5,
-        text: "5. Do you drink alcohol, nicotine (cigarettes) or caffeine (coffee, cola, tea, chocolate, energy drinks) in the evenings? ",
+        text: "5. Do you use alcohol, nicotine (cigarettes, vaping) or caffeine (coffee, cola, tea, chocolate, energy drinks) in the evenings? ",
         options: ["No", "Yes"]
       },
       {
@@ -152,7 +153,7 @@
 
 }
 
-// Modified displayQuestion function to include Back and Skip buttons
+// Modified displayQuestion function to include Back and Skip buttons. questions 1 and 2 are required
 function displayQuestion(index) {
   updateProgressBar(index, questions.length);
 
@@ -164,18 +165,41 @@ function displayQuestion(index) {
     return;
   }
 
-  let html = `<p class="question-text">${question.text}</p><div class="flex-container">`;
+  let mandatoryQuestions = [0, 1];  // indices of mandatory questions
+  let isMandatory = mandatoryQuestions.includes(index);
+
+  let html = '';
+
+  // Question container
+  html += '<div class="question-container">';
+  html += '<div class="text-container">';
+  html += `<p class="${isMandatory ? 'question-text-mandatory' : 'question-text'}">${question.text} ${isMandatory ? '<span class="mandatory-indicator">*</span>' : ''}</p>`;
+  if (isMandatory) {
+    html += '<p class="helper-text">This question can\'t be skipped</p>';  // Helper text added
+  }
+  html += '</div>';  // Close the text-container div
+  html += '</div>'; // Close the question-container div
+
+  // Radio container
+  html += '<div class="radio-container">';
   question.options.forEach((option, i) => {
     html += `<label class="boxed-radio"><input type="radio" name="q${index}" value="${option}" style="display:none;" onclick="handleUserInput(${index}, '${option}')">${option}</label>`;
   });
   html += '</div>';
 
-  // Append Back and Skip buttons
+  // Error message
+  html += `<div id="error-message-${index}" class="error-message"></div>`;
+  
+  // Back and Skip buttons
   html += `<button onclick="handleBackClick(${index})"${index === 0 ? ' disabled' : ''}>Back</button>`;
-  html += `<button onclick="handleSkipClick(${index})">Skip</button>`;
+  html += `<button id="skip-button-${index}" onclick="handleSkipClick(${index})" ${isMandatory ? 'disabled' : ''}>Skip</button>`;
 
+  // Update the inner HTML
   document.getElementById('questionDiv').innerHTML = html;
 }
+
+
+
 
 // Function to handle Back button click
 function handleBackClick(index) {
@@ -185,18 +209,27 @@ function handleBackClick(index) {
 
 // Function to handle Skip button click
 function handleSkipClick(index) {
-  // Navigate to the next question by incrementing the index
   displayQuestion(index + 1);
 }
+
 
 // Modified handleUserInput function
 function handleUserInput(index, answer) {
   const questionID = questions[index].id;
   userAnswers[questionID] = answer;
 
-  // Navigate to the next question by incrementing the index
+  let mandatoryQuestions = [0, 1];
+  let isMandatory = mandatoryQuestions.includes(index);
+
+  if (isMandatory && answer) {
+    document.getElementById(`error-message-${index}`).innerHTML = '';
+    document.getElementById(`skip-button-${index}`).disabled = false;
+  }
+
   displayQuestion(index + 1);
 }
+
+
 
 // Initialize empty Set for unique recommendations
 let recommendations = new Set();
@@ -210,6 +243,27 @@ function sleepProblemCondition(userAnswers) {
 
   return condition1or2 && !bothNo;
 }
+
+// Checks if three or more yes answers for questions 3-20
+function hasThreeOrMoreYes(userAnswers) {
+  let yesCount = 0;
+
+  const totalQuestions = Object.keys(userAnswers).length;
+
+  for (let i = 3; i <= totalQuestions; i++) {
+    if (userAnswers[i.toString()] === 'Yes') {
+      yesCount++;
+    }
+
+    if (yesCount >= 3) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 
 // Returns True if "Yes" to any question numbered 3 and above.
 function couldSleepBeImprovedCondition(userAnswers) {
@@ -291,6 +345,9 @@ function generateRecommendations() {
   } else {
       if (sleepProblemCondition(userAnswers)) {
         recommendations.add("Having a sleep problem can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
+        if (hasThreeOrMoreYes(userAnswers)) {
+          recommendations.add("You seem to have several areas that could be affecting your sleep. Your problem may be quite complex and so you may wish to see your GP or a sleep specialist.")
+        }
       } else {
         recommendations.add("Based on your answers you may not have a sleep problem. ");
         if (couldSleepBeImprovedCondition(userAnswers)){
@@ -298,6 +355,8 @@ function generateRecommendations() {
         }
       }
   }
+
+ 
 
   if (userAnswers[3] === 'Yes') {
   recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, as a result of a misalignment between the body and the sleep-wake cycle. This can result in mood problems, poor work performance, higher accident risk and added health problems. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
@@ -336,8 +395,12 @@ function generateRecommendations() {
   }
 
 
-  if (userAnswers[13] === 'Yes' || userAnswers[14] === 'Yes') {
-  recommendations.add("You said you snore loudly. If you stop breathing at night (called 'apnoea') and have a morning headache and a dry mouth, you likely have Obstructive Sleep Apnoea (OSA). You may wish to see your GP about this. You can answer a few more questions with the <a href='https://jackofallorgans.com/stopbang'target='_blank'>STOP-BANG tool</a> here to see how likely the diagnosis is. See also <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
+  if (userAnswers[13] === 'Yes' && userAnswers[14] === 'Yes') {
+  recommendations.add("You said you snore loudly and you are falling asleep during the day. If you also stop breathing at night (called 'apnoea') then you likely have Obstructive Sleep Apnoea (OSA). Morning headaches and a dry mouth are other potential symptoms of OSA. You may wish to see your GP about this. You can answer a few more questions with the <a href='https://jackofallorgans.com/stopbang'target='_blank'>STOP-BANG tool</a> here to see how likely the diagnosis is. See also <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
+  }
+
+  if (userAnswers[13] === 'No' && userAnswers[14] === 'Yes') {
+    recommendations.add("You said you are falling asleep frequently during the day. The medical term for this is 'Excessive Daytime Sleepiness.' The most common cause is sleep deprivation. Another common cause is Obstructive Sleep Apnoea, but you said you don't snore so this is less likely. If you are going to bed too late (e.g. playing video games late in the night, partying late, etc) then go to bed earlier and try get at least 7 hours of sleep.");
   }
 
   if (userAnswers[15] === 'Yes') {
