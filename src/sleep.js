@@ -120,6 +120,7 @@
 
       // Hide the Start button
       document.getElementById('startButton').style.display = 'none';
+      
 
       // Show the questionDiv
       document.getElementById('questionDiv').classList.remove('hidden');
@@ -150,6 +151,12 @@
     //clear print and credits
     document.getElementById('printButton').style.display = 'none';
     document.getElementById('creditsDiv').style.display = 'none';
+
+    // Hide the "Copy to Clipboard" button if it exists
+    const copyButton = document.getElementById('copyButton');
+    if (copyButton) {
+      copyButton.style.display = 'none';
+    }
 
 }
 
