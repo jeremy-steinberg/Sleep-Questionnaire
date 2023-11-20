@@ -26,22 +26,22 @@
       },
       {
         id: 5,
-        text: "5. Do you use alcohol, nicotine (cigarettes, vaping) or caffeine (coffee, cola, tea, chocolate, energy drinks) in the evenings? ",
+        text: "5. Do you drink alcohol, nicotine (cigarettes, vaping) or caffeine (coffee, cola, tea, chocolate, energy drinks) in the evenings? ",
         options: ["No", "Yes"]
       },
       {
         id: 6,
-        text: "6. Do you frequently nap during the day or have highly irregular and variable bedtimes or rising times? ",
+        text: "6. Do you during the day or frequently change your bedtimes or waking times?",
         options: ["No", "Yes"]
       },
       {
         id: 7,
-        text: "7. Do you engage in mentally stimulating, moderate to strenuous exercise or emotionally upsetting activities within a couple of hours of bedtime?",
+        text: "7. Do you engage in activities that are mentally or physically intense close to bedtime? Examples include strenuous exercise, video games, screen time, doom scrolling, and work-related activities.",
         options: ["No", "Yes"]
       },
       {
         id: 8,
-        text: "8. Do you frequently use the bed for activities other than sleep or intimacy? (e.g., television watching, reading, studying, snacking, thinking, planning)",
+        text: "8. Do you frequently use the bed for activities other than sleep or intimacy? (e.g., television watching, studying, snacking, thinking, planning)",
         options: ["No", "Yes"]
       },
       {
@@ -81,27 +81,27 @@
       },
       {
         id: 16,
-        text: "16. When you are asleep, do you sleepwalk, sleep talk, grind your teeth, have restless legs or anything else you would consider unusual? ",
+        text: "16. Do you sleepwalk, sleep talk, grind your teeth, have restless legs or anything else you would consider unusual? ",
         options: ["No", "Yes"]
       },
       {
         id: 17,
-        text: "17. Do you ever feel the need to reduce the amount of alcohol you drink?",
+        text: "17. Do you regularly use alcohol in the evenings?",
         options: ["No", "Yes"]
       },
       {
         id: 18,
-        text: "18. Do you ever feel the need to cut down on your non-prescription or recreational drug use?",
+        text: "18. Do you use non-prescription or rectreational drugs?",
         options: ["No", "Yes"]
       },
       {
         id: 19,
-        text: "19. Do you go to bed late at night (e.g. after midnight?)",
+        text: "19. Do you consider yourself a night-owl (go to bed after midnight)?",
         options: ["No", "Yes"]
       },
       {
         id: 20,
-        text: "20. When you can, do you prefer to sleep in late in the morning ",
+        text: "20. When you can, do you prefer to sleep in late in the mornings?",
         options: ["No", "Yes"]
       }
     ];
@@ -133,7 +133,7 @@
     }
 
 
-    function resetQuestionnaire() {
+function resetQuestionnaire() {
   // Clear user answers and recommendations
   userAnswers = {};
   recommendations.clear();
@@ -160,31 +160,48 @@
 
 }
 
-// Modified displayQuestion function to include Back and Skip buttons. questions 1 and 2 are required
+
+
+//  displayQuestion function to display the quesitons and associated buttons
+let currentQuestionIndex = null;
+let animationsEnabled = true; // Default value is true
+
 function displayQuestion(index) {
   updateProgressBar(index, questions.length);
 
+  // If the current question index is not null, animate it out before displaying the new question
+  if (currentQuestionIndex !== null) {
+    animateQuestionOut(currentQuestionIndex, () => {
+      updateQuestionContent(index);
+    });
+  } else {
+    updateQuestionContent(index);
+  }
+  currentQuestionIndex = index;
+}
+
+function updateQuestionContent(index) {
   const questionDiv = document.getElementById('questionDiv');
   const question = questions[index];
+
   if (!question) {
     questionDiv.classList.add('hidden');
     generateRecommendations();
     return;
   }
 
-  let mandatoryQuestions = [0, 1];  // indices of mandatory questions
+  let mandatoryQuestions = [0, 1]; // indices of mandatory questions
   let isMandatory = mandatoryQuestions.includes(index);
-
   let html = '';
 
-  // Question container
+  // Building the question content
   html += '<div class="question-container">';
   html += '<div class="text-container">';
   html += `<p class="${isMandatory ? 'question-text-mandatory' : 'question-text'}">${question.text} ${isMandatory ? '<span class="mandatory-indicator">*</span>' : ''}</p>`;
   if (isMandatory) {
-    html += '<p class="helper-text">This question can\'t be skipped</p>';  // Helper text added
+    html += '<p class="helper-text">This question can\'t be skipped</p>'; // Helper text added
   }
-  html += '</div>';  // Close the text-container div
+  html += '</div>'; // Close the text-container div
   html += '</div>'; // Close the question-container div
 
   // Radio container
@@ -196,13 +213,47 @@ function displayQuestion(index) {
 
   // Error message
   html += `<div id="error-message-${index}" class="error-message"></div>`;
-  
+
   // Back and Skip buttons
   html += `<button onclick="handleBackClick(${index})"${index === 0 ? ' disabled' : ''}>Back</button>`;
   html += `<button id="skip-button-${index}" onclick="handleSkipClick(${index})" ${isMandatory ? 'disabled' : ''}>Skip</button>`;
 
-  // Update the inner HTML
-  document.getElementById('questionDiv').innerHTML = html;
+  // Update the inner HTML and animate the question in
+  questionDiv.innerHTML = html;
+  animateQuestionIn();
+}
+
+function animateQuestionOut(index, callback) {
+  if (!animationsEnabled) {
+    callback(); // Immediately call the callback if animations are disabled
+    return;
+  }
+  
+  const questionDiv = document.getElementById('questionDiv');
+  questionDiv.classList.add('animate-out');
+  setTimeout(() => {
+    questionDiv.classList.remove('animate-out');
+    callback();
+  }, 300); // Duration of the animation
+}
+
+function animateQuestionIn() {
+  if (!animationsEnabled) {
+    return; // Do nothing if animations are disabled
+  }
+
+  const questionDiv = document.getElementById('questionDiv');
+  questionDiv.classList.add('animate-in');
+  setTimeout(() => {
+    questionDiv.classList.remove('animate-in');
+  }, 300); // Duration of the animation
+}
+
+
+
+function toggleAnimations() {
+  animationsEnabled = !animationsEnabled;
+  document.getElementById('toggleAnimationButton').innerText = animationsEnabled ? "Disable Animations" : "Enable Animations";
 }
 
 
@@ -348,10 +399,10 @@ function generateRecommendations() {
   `;
   
   if (allAnswersNo(userAnswers)) {
-    recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire.");
+    recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire, and so no recommendations have been generated.");
   } else {
       if (sleepProblemCondition(userAnswers)) {
-        recommendations.add("Having a sleep problem can be frustrating but the good news is there are things you can do to improve your sleep.  Learn more: <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>10 tips to help you sleep.</a> Learn more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>insomnia</a>.");
+        recommendations.add("Having a sleep problem can be frustrating but the good news is there are things you can do to improve your sleep. Adopting healthy habits and behaviours and changing environmental factors to help you have a good night's sleep is often called 'sleep hygiene', <a href='https://healthify.nz/hauora-wellbeing/s/sleep-tips/' target='_blank'>Learn more about tips to improve your sleep.</a> Remember, improved sleep will not happen as soon as changes are made. But if good sleep habits are maintained, sleep will certainly get better.");
         if (hasThreeOrMoreYes(userAnswers)) {
           recommendations.add("You seem to have several areas that could be affecting your sleep. Your problem may be quite complex and so you may wish to see your GP or a sleep specialist.")
         }
@@ -366,19 +417,19 @@ function generateRecommendations() {
  
 
   if (userAnswers[3] === 'Yes') {
-  recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, as a result of a misalignment between the body and the sleep-wake cycle. This can result in mood problems, poor work performance, higher accident risk and added health problems. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
+  recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, because the body and the sleep-wake cycle are not aligned. This can result in mood problems, poor work performance, higher accident risk and added health problems. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Learn more about shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
   }
 
   if (userAnswers[4] === 'Yes') {
-  recommendations.add("You answered that your bedroom is hot and uncomfortable. You should attend to this if you aren't happy with your sleep.");
+  recommendations.add("You answered that your bedroom is hot and uncomfortable. To sleep well, it's important to have a restful bedroom environment. You can do this by making your bedroom dark, cool, and quiet to ensure that your bed is comfortable.");
   }
 
   if (userAnswers[5] === 'Yes') {
-  recommendations.add("You answered that you drink alcohol, nicotine, or caffeine in the evenings. These substances are known as stimultants, which can give the feeling of increased alertness but at the same time, cause difficulty in getting to sleep. You should attend to this if you aren't happy with your sleep. Learn more about stimulants and sleep: See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine/' target='_blank'>Sleep and Caffeine page</a> and <a href='https://healthify.nz/hauora-wellbeing/s/sleep-how-food-drink-affects/' target='_blank'>Food and Drink effects on Sleep page on Healthify</a>");
+  recommendations.add("You answered that you either use alcohol, use nicotine, or have caffeine in the evenings. These substances can cause sleep problems. Learn more about:<ul><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol/' target='_blank'>Sleep and alcohol</a></li><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine' target='_blank'> Sleep and caffeine</a></li><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-nicotine' target='_blank'>Sleep and nicotine</a></li></ul>");
   }
 
   if (userAnswers[6] === 'Yes') {
-  recommendations.add("You answered yes to frequent napping. This may be causing your sleep problem. However it may be due sleep deprivation from another cause, e.g. sleep apnoea. Regular bed and rising times are good sleep hygiene approaches. Napping should be limited to about 30 minutes and be done before 1500 hrs.");
+  recommendations.add("You answered yes to frequent napping. This may be causing or contributing to your sleep problem. However it may be due sleep deprivation from another cause, e.g. sleep apnoea. Regular bed and rising times are good sleep hygiene approaches. Napping should be limited to about 30 minutes and be done before 1500 hrs.");
   }
 
   if (userAnswers[7] === 'Yes') {
@@ -386,18 +437,30 @@ function generateRecommendations() {
  }
 
   if (userAnswers[8] === 'Yes') {
-  recommendations.add("You answered yes to frequently using the bed for activities other than sleep or intimacy. This may be causing or contributing to your sleep problem. You may wish to change these behaviours");
+  recommendations.add("You answered yes to frequently using the bed for activities other than sleep or intimacy. This may be causing or contributing to your sleep problem. You may wish to change these behaviours. Only use your bedroom for sleep, sex, and getting dressed. This will help your brain to recognise your bed as a place for sleeping. Avoid using electronic devices such as mobile phones or laptops in bed");
  }
 
  //check for mood or anxiety problem
   const moodOrAnxiety = [userAnswers[11], userAnswers[12]].some(answer => answer === 'Yes');
   const moodOrDepression = [userAnswers[9], userAnswers[10]].some(answer => answer === 'Yes');
 
+  const justAThoughtLinks = `
+  <ul><li><a href="https://www.justathought.co.nz/anxiety" target="_blank">Generalised anxiety course</a></li>
+  <li><a href="https://www.justathought.co.nz/depression" target="_blank">Depression course</a></li>
+  <li><a href="https://www.justathought.co.nz/health-anxiety" target="_blank">Health anxiety course</a></li>
+  <li><a href="https://www.justathought.co.nz/mixed" target="_blank">Mixed Depression & Anxiety course</a></li></ul>
+  `;
+
+  const justAThoughtLinks2 = `
+  <ul><li><a href="https://www.justathought.co.nz/depression" target="_blank">Depression course</a></li></ul>
+  `;
+
+
   if (moodOrAnxiety || moodOrDepression) {
     if (moodOrAnxiety) {
-      recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality.");
+      recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality. Alternatively you may want to try a self-help course to better manage your mental health. Learn more:" + justAThoughtLinks);
     } else if (moodOrDepression) {
-      recommendations.add("You may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality.");
+      recommendations.add("You may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality. Alternatively you may want to try a self-help course to better manage your mental health. Learn more:" + justAThoughtLinks2);
     }
   }
 
@@ -415,15 +478,15 @@ function generateRecommendations() {
  }
 
   if (userAnswers[16] === 'Yes') {
-  recommendations.add("You may have restless legs or some other issue with your brain (e.g. sleep walking, sleep talking, etc). The technical term for this is a parasomnia. If your bedsheets are in complete disarray or you have ever woken up with unexplained injuries then parasomnia is more likely. Discuss this with your GP as this could be a factor in your sleep quality.");
+  recommendations.add("You have answered yes to sleepwalking, sleep talking, grinding your teeth, having restless legs.  The technical term for these is parasomnia. Parasomnias are a group of sleep problems that are described as odd behaviours or experiences when you sleep. Parasomnias are common and generally get better over time. Discuss this with your GP as this could be a factor in your sleep quality. <a href='https://healthify.nz/health-a-z/p-parasomnias' target='_blank'>Learn more about parasomnias.</a> ");
  }
 
   if (userAnswers[17] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Try and reduce this, discuss this with your GP, or self refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra suppor. See <a href='https://healthify.nz/hauora-wellbeing/a/alcohol-and-harmful-drinking/' target='_blank'>alcohol page on Healthify</a>");
+  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Any alcohol may affect your sleep because after a few hours it breaks down into a stimulant. Some people have alcohol before bedtime thinking it will make them feel sleepy; however, it can have the opposite effect. Try and reduce this, discuss this with your GP, or self-refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol' target='_blank'>Learn more about sleep and alcohol</a>");
  }
 
   if (userAnswers[18] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Or discuss this with your GP.");
+  recommendations.add("You said yes to feeling the need to reduce the amount of non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Or discuss this with your GP. <a href='https://healthify.nz/health-a-z/i/illegal-drugs' target='_blank'>Learn more</a>");
  }
 
   if (userAnswers[19] === 'Yes' || userAnswers[20] === 'Yes') {
@@ -462,6 +525,7 @@ function displayRecommendations() {
   // Create the panel to display answers
   let panel = document.createElement('div');
   panel.className = "panel";
+  panel.id = "answersPanel";
 
   // Add answers to the panel
   for (const [questionID, answer] of Object.entries(userAnswers)) {
@@ -473,7 +537,22 @@ function displayRecommendations() {
 
   // Show the recommendations with a heading
   const recommendationsDiv = document.getElementById('recommendationsDiv');
-  recommendationsDiv.innerHTML = "<h2>Recommendations</h2>";
+  if (animationsEnabled) {
+    recommendationsDiv.classList.add('fade-in');
+  } else {
+    recommendationsDiv.classList.remove('fade-in');
+  }
+  const RecommendationIntro = `
+  <h2>Your Twenty Winks Personalised Plan</h2>
+  <p>The following plan has been generated based on the answers you provided in the online questionnaire. This plan includes your answers, suggested next steps and some resources for you to use. 
+  Note: This assessment is not a substitute for professional advice. Great care has been taken to provide you with personalised recommendations based on your responses, but you should always seek the advice of a qualified health professional with any questions about your sleep problems.</p>
+  `;
+
+  if (allAnswersNo(userAnswers)){
+  recommendationsDiv.innerHTML = "";
+  } else {
+  recommendationsDiv.innerHTML = RecommendationIntro;
+  }
 
   // Check if there is more than one recommendation
   if (recommendations.size > 1) {
@@ -607,5 +686,23 @@ function loadFromURL() {
   }
 }
 
+
 // Add this line to call loadFromURL when the page loads
 window.addEventListener("load", loadFromURL);
+
+//Not currently implemented, having issues.
+function toggleDarkMode() {
+  const isDarkMode = document.body.classList.toggle('dark-mode');
+  const elementsToToggle = ['body', 'container', 'instructionsDiv', 'creditsDiv', 'questionDiv', 'recommendationsDiv', 'otherResourcesDiv', 'answersPanel'];
+
+  elementsToToggle.forEach(elementId => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.classList.toggle('dark-mode', isDarkMode);
+    }
+  });
+
+  document.getElementById('darkModeToggle').innerText = isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode";
+  localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+}
+
