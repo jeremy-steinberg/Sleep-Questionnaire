@@ -31,7 +31,7 @@
       },
       {
         id: 6,
-        text: "6. Do you during the day or frequently change your bedtimes or waking times?",
+        text: "6. Do you nap during the day or frequently change your bedtimes or waking times?",
         options: ["No", "Yes"]
       },
       {
