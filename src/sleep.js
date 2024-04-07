@@ -91,7 +91,7 @@
       },
       {
         id: 18,
-        text: "18. Do you use non-prescription or rectreational drugs?",
+        text: "18. Do you use non-prescription or recreational drugs?",
         options: ["No", "Yes"]
       },
       {
@@ -395,8 +395,19 @@ function generateRecommendations() {
   It sounds like none of the questions from this questionnaire apply. If despite this you still feel that you have a sleep problem you may have a condition called chronic insomnia. This is where you have a sleep disorder without any particular explanation. It is very common and can be helped by several treatments.
   `;
   const chronicInsomniaDiagnosisAdditional = `
-  If you are struggling with sleep the above may not be the only cause. It is possible to also have a condition called chronic insomnia. This is a very common condition where you have a sleep disorder without any particular explanation. If fixing the above doesn't work or isn't possible, you could explore treatments for chronic insomnia.
+  If you are struggling with sleep the above may not be the only cause. It is possible to also have a condition called chronic insomnia. This is a very common condition (affecting 10% to 15% of people) where you have a sleep disorder without any particular explanation. Short-term insomnia may be caused by stress or changes in your schedule or environment. It can last for a few days or weeks. Chronic (long-term) insomnia occurs 3 or more nights a week, lasts more than 3 months, and cannot be fully explained by another health problem. If fixing the things you've identified as being a problem for you doesn't work, or isn't possible, you could explore treatments for chronic insomnia. Read more about <a href='https://healthify.nz/health-a-z/i/insomnia/' target='_blank'>chronic insomnia.</a>
   `;
+  const napping = `
+  <p>You answered yes to frequent napping. This may be causing or contributing to your sleep problem.</p>
+  <p>For most people short naps (short sleeps) generally don't interfere with nighttime sleep at night but for some, napping at the wrong time of day or for too long can cause problems. Here are a few tips to get the most out of a nap without affecting your sleep:</p>
+  <ul>
+    <li><strong>Take naps in the early afternoon:</strong> Most sleep experts recommend napping no later than 2pm. Napping in the late afternoon may affect your ability to fall asleep at a reasonable time later that night, and could disrupt your night-time sleep.</li>
+    <li><strong>Keep naps short:</strong> Aim to nap for only 10 to 20 minutes. The longer you nap, the more likely you are to feel sleepy afterward. However, young adults might be able to manage longer naps. You can limit the time of your nap by setting an alarm.</li>
+    <li><strong>Create a restful environment:</strong> Nap in a quiet, dark place with comfortable room temperature and few distractions. Consider wearing an eye mask and earplugs.</li>
+    <li><strong>After napping:</strong> give yourself time to wake up before starting any activities.</li>
+  </ul></br>
+  <strong>Note:</strong> Napping may be due sleep deprivation from other causes such as <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>sleep apnoea.</a>. Talk to your doctor about this if you're concerned.</p>
+  `
   
   if (allAnswersNo(userAnswers)) {
     recommendations.add("You don't seem to have a sleep problem based on the answers you gave to this questionnaire, and so no recommendations have been generated.");
@@ -417,7 +428,7 @@ function generateRecommendations() {
  
 
   if (userAnswers[3] === 'Yes') {
-  recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, because the body and the sleep-wake cycle are not aligned. This can result in mood problems, poor work performance, higher accident risk and added health problems. See <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Learn more about shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
+  recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, because the body and the sleep-wake cycle are not aligned. This can result in mood problems, poor work performance, higher accident risk and added health problems. <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Learn more about shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
   }
 
   if (userAnswers[4] === 'Yes') {
@@ -425,19 +436,19 @@ function generateRecommendations() {
   }
 
   if (userAnswers[5] === 'Yes') {
-  recommendations.add("You answered that you either use alcohol, use nicotine, or have caffeine in the evenings. These substances can cause sleep problems. Learn more about:<ul><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol/' target='_blank'>Sleep and alcohol</a></li><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine' target='_blank'> Sleep and caffeine</a></li><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-nicotine' target='_blank'>Sleep and nicotine</a></li></ul>");
+  recommendations.add("You indicated that you use alcohol, use nicotine, or have caffeine in the evenings. These substances can cause sleep problems. Learn more about:<ul><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol/' target='_blank'>Sleep and alcohol</a></li><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-caffeine' target='_blank'> Sleep and caffeine</a></li><li><a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-nicotine' target='_blank'>Sleep and nicotine</a></li></ul>");
   }
 
   if (userAnswers[6] === 'Yes') {
-  recommendations.add("You answered yes to frequent napping. This may be causing or contributing to your sleep problem. However it may be due sleep deprivation from another cause, e.g. sleep apnoea. Regular bed and rising times are good sleep hygiene approaches. Napping should be limited to about 30 minutes and be done before 1500 hrs.");
+  recommendations.add(napping);
   }
 
   if (userAnswers[7] === 'Yes') {
-  recommendations.add("You answered yes to engaging in mentally stimulating, moderate to strenous exercise, or emotionally upsetting acitvities within a couple hours of bedtime. This may be causing or contributing to your sleep problem. You may wish to change these behaviours."); 
+  recommendations.add("You answered yes to engaging in mentally stimulating, moderate to strenuous exercise, or emotionally upsetting activities within a couple hours of bedtime. These may be causing or contributing to your sleep problem and are best avoided. Taking the time to relax and unwind before bed has been shown to improve sleep quality. It helps you de-stress and sends signals to your body and mind that daytime activities are over and it's time to prepare for sleep."); 
  }
 
   if (userAnswers[8] === 'Yes') {
-  recommendations.add("You answered yes to frequently using the bed for activities other than sleep or intimacy. This may be causing or contributing to your sleep problem. You may wish to change these behaviours. Only use your bedroom for sleep, sex, and getting dressed. This will help your brain to recognise your bed as a place for sleeping. Avoid using electronic devices such as mobile phones or laptops in bed");
+  recommendations.add("You answered yes to frequently using the bed for activities other than sleep or intimacy. This may be causing or contributing to your sleep problem.  Your bed should be a place where you can relax and feel comfortable. Only use your bed for sleep or intimacy. This will help your brain to recognise your bed as a place for sleeping. Avoid using electronic devices (eg, mobile phones or laptops) in bed.");
  }
 
  //check for mood or anxiety problem
@@ -458,15 +469,15 @@ function generateRecommendations() {
 
   if (moodOrAnxiety || moodOrDepression) {
     if (moodOrAnxiety) {
-      recommendations.add("You may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality. Alternatively you may want to try a self-help course to better manage your mental health. Learn more:" + justAThoughtLinks);
+      recommendations.add("Based on the answers you gave you may have a mood, anxiety or stress problem. Discuss this with your GP as this could be a factor in your sleep quality. Alternatively you may want to try a self-help course to better manage your mental health. Learn more:" + justAThoughtLinks);
     } else if (moodOrDepression) {
-      recommendations.add("You may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality. Alternatively you may want to try a self-help course to better manage your mental health. Learn more:" + justAThoughtLinks2);
+      recommendations.add("Based on the answers you gave you may have a mood or depression problem. Discuss this with your GP as this could be a factor in your sleep quality. Alternatively you may want to try a self-help course to better manage your mental health. Learn more:" + justAThoughtLinks2);
     }
   }
 
 
   if (userAnswers[13] === 'Yes' && userAnswers[14] === 'Yes') {
-  recommendations.add("You said you snore loudly and you are falling asleep during the day. If you also stop breathing at night (called 'apnoea') then you likely have Obstructive Sleep Apnoea (OSA). Morning headaches and a dry mouth are other potential symptoms of OSA. You may wish to see your GP about this. You can answer a few more questions with the <a href='https://jackofallorgans.com/stopbang'target='_blank'>STOP-BANG tool</a> here to see how likely the diagnosis is. See also <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea page on Healthify</a>");
+  recommendations.add("You said you snore loudly and you are falling asleep during the day. If you also stop breathing at night (called 'apnoea') then you likely have Obstructive Sleep Apnoea (OSA). Morning headaches and a dry mouth are other potential symptoms of OSA. You may wish to see your GP about this. You can answer a few more questions with the <a href='https://jackofallorgans.com/stopbang'target='_blank'>STOP-BANG tool</a> here to see how likely the diagnosis is. Learn more about <a href='https://healthify.nz/health-a-z/o/obstructive-sleep-apnoea/' target='_blank'>Obstructive Sleep Apnoea</a>");
   }
 
   if (userAnswers[13] === 'No' && userAnswers[14] === 'Yes') {
@@ -474,23 +485,23 @@ function generateRecommendations() {
   }
 
   if (userAnswers[15] === 'Yes') {
-  recommendations.add("You said you have a significant health problem affecting sleep quality. Discuss this with your GP as this could be a factor in your sleep quality.");  
+  recommendations.add("You said you have a significant health problem affecting sleep quality. Discuss this with your GP in case there is something that can be done about it as this could be a factor in your sleep quality.");  
  }
 
   if (userAnswers[16] === 'Yes') {
-  recommendations.add("You have answered yes to sleepwalking, sleep talking, grinding your teeth, having restless legs.  The technical term for these is parasomnia. Parasomnias are a group of sleep problems that are described as odd behaviours or experiences when you sleep. Parasomnias are common and generally get better over time. Discuss this with your GP as this could be a factor in your sleep quality. <a href='https://healthify.nz/health-a-z/p-parasomnias' target='_blank'>Learn more about parasomnias.</a> ");
+  recommendations.add("You have answered yes to sleepwalking, sleep talking, grinding your teeth, having restless legs.  The technical term for these is parasomnia. Parasomnias are a group of sleep problems that are described as odd behaviours or experiences when you sleep. Parasomnias are common and generally get better over time. Discuss this with your GP, and learn more about <a href='https://healthify.nz/health-a-z/p-parasomnias' target='_blank'>parasomnias.</a> ");
  }
 
   if (userAnswers[17] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of alcohol you drink. Any alcohol may affect your sleep because after a few hours it breaks down into a stimulant. Some people have alcohol before bedtime thinking it will make them feel sleepy; however, it can have the opposite effect. Try and reduce this, discuss this with your GP, or self-refer to <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol' target='_blank'>Learn more about sleep and alcohol</a>");
+  recommendations.add("You said yes to wanting to reduce the amount of alcohol you drink. Any alcohol may affect your sleep because after a few hours it breaks down into a stimulant. Some people have alcohol before bedtime thinking it will make them feel sleepy, but it can have the opposite effect. To reduce the effects of alcohol on sleep, give your body enough time to metabolize alcohol before you sleep which means stopping drinking alcohol at least 4 hours before bedtime. If you're concerned about your drinking, talk to your healthcare provider, or contact <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. Learn more about <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol' target='_blank'>sleep and alcohol</a>");
  }
 
   if (userAnswers[18] === 'Yes') {
-  recommendations.add("You said yes to feeling the need to reduce the amount of non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Or discuss this with your GP. <a href='https://healthify.nz/health-a-z/i/illegal-drugs' target='_blank'>Learn more</a>");
+  recommendations.add("You said yes to needing to reduce your non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Talk to your healthcare provider or contact <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. Learn more about <a href='https://healthify.nz/health-a-z/i/illegal-drugs' target='_blank'>illegal drugs</a>");
  }
 
   if (userAnswers[19] === 'Yes' || userAnswers[20] === 'Yes') {
-  recommendations.add("You may have a condition called delayed sleep phase disorder. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night.");
+  recommendations.add("You said that you go to bed late at night and like to sleep late in the morning. You may have a condition called delayed sleep phase disorder. This is when you have got into a habit of going to sleep and waking later than is usual or functional. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night. It's important to use melatonin carefully with advice from a healthcare provider. Read more about <a href='https://healthify.nz/health-a-z/d/delayed-sleep-phase-disorder/' target='_blank'>delayed sleep phase disorder (DSPD).</a>");
  }
 
   // Check if meets the sleep restriction recommendation condition, without another cause
@@ -544,8 +555,12 @@ function displayRecommendations() {
   }
   const RecommendationIntro = `
   <h2>Your Twenty Winks Personalised Plan</h2>
+ 
   <p>The following plan has been generated based on the answers you provided in the online questionnaire. This plan includes your answers, suggested next steps and some resources for you to use. 
-  Note: This assessment is not a substitute for professional advice. Great care has been taken to provide you with personalised recommendations based on your responses, but you should always seek the advice of a qualified health professional with any questions about your sleep problems.</p>
+  These resources come from the Healthify He Puna Waiora website which provides easy to read health information for all New Zealanders.</p>
+
+  <p><strong>Note</strong>: This assessment is not a substitute for professional advice. Great care has been taken to provide you with personalised recommendations based on your responses, but you should always seek the advice of a qualified health professional with any questions about your sleep problems.</p>
+
   `;
 
   if (allAnswersNo(userAnswers)){
