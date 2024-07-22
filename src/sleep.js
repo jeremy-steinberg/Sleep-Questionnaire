@@ -379,12 +379,8 @@ function generateRecommendations() {
   const sleepRestrictionText = `
   <h3>Chronic Insomnia Treatments</h3>
   <h4>Time in bed restriction </h4>
-  <p>One treatment option is sleep restriction or time in bed restriction. This is where you go to bed later and spend fewer hours in bed.</p>
-  <p>If for work you drive vehicles, operate heavy machinery, or do delicate procedures, e.g. surgeons, you should consider treatment during your vacation- sleep deprivation is a short-term safety risk.</p>
-  <p>Estimate time spent in bed versus time spent asleep. If you cannot do this from memory, you can use a sleep diary if necessary. Work out what time you go to bed and wake up. Work out how long you stay asleep. Usually, there is a mismatch, e.g. 9 hours in bed and 6 hours asleep. would mean you are diluting their good sleep over 9 rather than 6 hours. Try go to bed later and wake up simultaneously with the rest of your household. Do only quiet, relaxing activities before bedtime. These activities must be done outside the bed and not lying down to avoid naps, which can disrupt the routine. We recommend you keep this new time in bed for two weeks before making any adjustments. People usually reportd that the quality of their sleep improves as they feel they are starting to have a deep sleep and the sleep period is consolidated.</p>
-  <p>After two weeks: Nothing else is needed if you is sleeping better and functioning well. Many people prefer to continue on the bed restriction schedule as they find it very effective.</p>
-  <p>If you are sleeping better but feel sleep deprived the next day, you may wish to add 30 minutes to the time allowed in bed for another two weeks and continue doing so until the feelings of sleep deprivation disappear while still maintaining continuous sleep at night </p>
-  <p>If you are not sleeping better, you may wish to reduce the time in bed by 30 minutes (but not to less than five hours at night). Try each option for at least two weeks before making another change. If you are not sleeping better at five hours per night, you may wish to get some advice from a sleep specialist. You may need an overnight sleep study to see if there are other causes of insomnia, e.g. sleep apnoea or a movement disorder.</p>
+  <p>One treatment option is sleep restriction or time in bed restriction. This involves creating a new sleep schedule by limiting the amount of time you spend in bed, so that the time you spend in bed matches the time you actually sleep..</p>
+  <p>Read more about it and see some example plans by going to the <a href='https://healthify.nz/health-a-z/i/insomnia/#collapse20280' target='_blank'>Healthify insomnia page</a></p>
   <h4>Medication</h4>
   <p>You could consider trying <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin.</a></p>
   <p>Other medicines can help you sleep but are difficult to stop once you take them regularly and they also tend to lose effectiveness over time. </p>
@@ -702,22 +698,38 @@ function loadFromURL() {
 }
 
 
-// Add this line to call loadFromURL when the page loads
-window.addEventListener("load", loadFromURL);
 
-//Not currently implemented, having issues.
 function toggleDarkMode() {
   const isDarkMode = document.body.classList.toggle('dark-mode');
-  const elementsToToggle = ['body', 'container', 'instructionsDiv', 'creditsDiv', 'questionDiv', 'recommendationsDiv', 'otherResourcesDiv', 'answersPanel'];
+  const elementsToToggle = ['container', 'instructionsDiv', 'creditsDiv', 'questionDiv', 'recommendationsDiv', 'otherResourcesDiv'];
 
   elementsToToggle.forEach(elementId => {
     const element = document.getElementById(elementId);
     if (element) {
-      element.classList.toggle('dark-mode', isDarkMode);
+      element.classList.toggle('dark-mode');
     }
   });
 
+  const panels = document.querySelectorAll('.panel');
+  panels.forEach(panel => panel.classList.toggle('dark-mode'));
+
   document.getElementById('darkModeToggle').innerText = isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode";
+  
+  // Save the dark mode preference to localStorage
   localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
 }
+
+// Function to load dark mode preference
+function loadDarkModePreference() {
+  const isDarkMode = localStorage.getItem('darkMode') === 'true';
+  if (isDarkMode) {
+    toggleDarkMode();
+  }
+}
+
+// Call this function when the page loads
+window.addEventListener("load", function() {
+  loadFromURL();
+  loadDarkModePreference();
+});
 
