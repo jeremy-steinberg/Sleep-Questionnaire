@@ -76,7 +76,7 @@
       },
       {
         id: 15,
-        text: "15. Do you have any significant health problems affecting your sleep quality, such as pain, difficulty breathing, acid reflux, or night cough? ",
+        text: "15. Do you have any significant health problems affecting your sleep quality, such as pain, difficulty breathing, menopause symptoms (e.g. hot flushes), acid reflux, or night cough? ",
         options: ["No", "Yes"]
       },
       {
@@ -421,8 +421,6 @@ function generateRecommendations() {
       }
   }
 
- 
-
   if (userAnswers[3] === 'Yes') {
   recommendations.add("You answered yes to being a shift worker. Shift workers can develop a condition known as shift work sleep disorder, because the body and the sleep-wake cycle are not aligned. This can result in mood problems, poor work performance, higher accident risk and added health problems. <a href='https://healthify.nz/hauora-wellbeing/s/sleep-shift-work/' target='_blank'>Learn more about shift Work page on Healthify and how it affects your sleep</a>. You may wish to see a sleep specialist as this can be a difficult problem to solve.");
   }
@@ -489,16 +487,21 @@ function generateRecommendations() {
  }
 
   if (userAnswers[17] === 'Yes') {
-  recommendations.add("You said yes to wanting to reduce the amount of alcohol you drink. Any alcohol may affect your sleep because after a few hours it breaks down into a stimulant. Some people have alcohol before bedtime thinking it will make them feel sleepy, but it can have the opposite effect. To reduce the effects of alcohol on sleep, give your body enough time to metabolize alcohol before you sleep which means stopping drinking alcohol at least 4 hours before bedtime. If you're concerned about your drinking, talk to your healthcare provider, or contact <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. Learn more about <a href='https://healthify.nz/hauora-wellbeing/s/sleep-and-alcohol' target='_blank'>sleep and alcohol</a>");
+  recommendations.add(" ");
  }
 
   if (userAnswers[18] === 'Yes') {
-  recommendations.add("You said yes to needing to reduce your non-prescription or recreational drug use. Try and reduce this as this could be a factor in your sleep quality. Talk to your healthcare provider or contact <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. Learn more about <a href='https://healthify.nz/health-a-z/i/illegal-drugs' target='_blank'>illegal drugs</a>");
+  recommendations.add("You said yes to regularly using non-prescription or recreational drugs. Try and reduce this as this could be a factor in your sleep quality. Talk to your healthcare provider or contact <a href='https://www.cads.org.nz/' target='_blank'>CADS</a> if you want extra support. Learn more about <a href='https://healthify.nz/health-a-z/i/illegal-drugs' target='_blank'>illegal drugs</a>");
  }
 
-  if (userAnswers[19] === 'Yes' || userAnswers[20] === 'Yes') {
-  recommendations.add("You said that you go to bed late at night and like to sleep late in the morning. You may have a condition called delayed sleep phase disorder. This is when you have got into a habit of going to sleep and waking later than is usual or functional. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night. It's important to use melatonin carefully with advice from a healthcare provider. Read more about <a href='https://healthify.nz/health-a-z/d/delayed-sleep-phase-disorder/' target='_blank'>delayed sleep phase disorder (DSPD).</a>");
- }
+  if (userAnswers[19] === 'Yes' && userAnswers[20] === 'Yes') {
+      recommendations.add("You said that you go to bed late at night and like to sleep late in the morning. This suggests you may have a condition called delayed sleep phase disorder. This is when you have got into a habit of going to sleep and waking later than is usual or functional. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night. It's important to use melatonin carefully with advice from a healthcare provider. Read more about <a href='https://healthify.nz/health-a-z/d/delayed-sleep-phase-disorder/' target='_blank'>delayed sleep phase disorder (DSPD).</a>");
+    } else if (userAnswers[19] === 'Yes') {
+      recommendations.add("You said that you go to bed late at night. You may have a condition called delayed sleep phase disorder. This is when you have got into a habit of going to sleep and waking later than is usual or functional. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night. It's important to use melatonin carefully with advice from a healthcare provider. Read more about <a href='https://healthify.nz/health-a-z/d/delayed-sleep-phase-disorder/' target='_blank'>delayed sleep phase disorder (DSPD).</a>");
+      recommendations.add("You also said you don't sleep late in the morning, despite going to bed late. Some people with delayed sleep phase disorder go to bed late but also get up early due to study or work commitments. This can lead to sleep deprivation.")
+    } else if (userAnswers[20] === 'Yes') {
+      recommendations.add("You said that you like to sleep late in the morning. You may have a condition called delayed sleep phase disorder. This is when you have got into a habit of going to sleep and waking later than is usual or functional. It can be helped by using a light box in the morning and <a href='https://healthify.nz/medicines-a-z/m/melatonin/' target='_blank'>melatonin</a> at night. It's important to use melatonin carefully with advice from a healthcare provider. Read more about <a href='https://healthify.nz/health-a-z/d/delayed-sleep-phase-disorder/' target='_blank'>delayed sleep phase disorder (DSPD).</a>");
+  }
 
   // Check if meets the sleep restriction recommendation condition, without another cause
   if (sleepRestrictionConditionWithoutCause(userAnswers)) {
